@@ -1,0 +1,79 @@
+{
+  "name": "fast-food-react-webpack",
+  "version": "1.0.0",
+  "description": "online food delivery app",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest",
+    "build": "webpack --mode production",
+    "start": "webpack-dev-server --open --mode development",
+    "coverage": "jest --coverage",
+    "coveralls": "cat ./coverage/lcov.info | node node_modules/.bin/coveralls"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/katunold/Fast-Food-react-webpack.git"
+  },
+  "author": "Arnold",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/katunold/Fast-Food-react-webpack/issues"
+  },
+  "homepage": "https://github.com/katunold/Fast-Food-react-webpack#readme",
+  "devDependencies": {
+    "@babel/core": "^7.2.2",
+    "@babel/plugin-proposal-class-properties": "^7.3.0",
+    "@babel/preset-env": "^7.3.1",
+    "@babel/preset-react": "^7.0.0",
+    "babel-jest": "^23.6.0",
+    "babel-loader": "^8.0.5",
+    "babel-preset-env": "^1.7.0",
+    "babel-preset-react": "^6.24.1",
+    "coveralls": "^3.0.2",
+    "css-loader": "^2.1.0",
+    "enzyme": "latest",
+    "enzyme-adapter-react-16": "latest",
+    "html-loader": "^0.5.5",
+    "html-webpack-plugin": "^3.2.0",
+    "jest": "^23.6.0",
+    "react": "^16.7.0",
+    "react-dom": "^16.7.0",
+    "react-test-renderer": "^16.7.0",
+    "redux-devtools-extension": "^2.13.5",
+    "style-loader": "^0.23.1",
+    "webpack": "^4.29.1",
+    "webpack-cli": "^3.2.3",
+    "webpack-dev-server": "^3.1.14"
+  },
+  "dependencies": {
+    "@material-ui/core": "^3.9.2",
+    "@material-ui/icons": "^3.0.1",
+    "babel-core": "^7.0.0-bridge.0",
+    "express": "^4.16.4",
+    "express-yields": "^1.1.2",
+    "fs-extra": "^7.0.1",
+    "material-ui": "^0.20.2",
+    "node-sass": "^4.11.0",
+    "prop-types": "^15.6.2",
+    "react-router-dom": "^4.3.1",
+    "react-scripts": "^2.1.3",
+    "sass-loader": "^7.1.0",
+    "webpack-dev-middleware": "^3.5.1",
+    "webpack-hot-middleware": "^2.24.3"
+  },
+  "jest": {
+    "moduleFileExtensions": [
+      "js",
+      "jsx"
+    ],
+    "moduleDirectories": [
+      "node_modules",
+      "bower_components",
+      "shared"
+    ],
+    "moduleNameMapper": {
+      "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)": "<rootDir>/src/__mocks__/fileMock.js",
+      "\\.(css|scss)$": "<rootDir>/src/__mocks__/styleMock.js"
+    }
+  }
+}
