@@ -35,7 +35,7 @@ const AuthForm = (props) => {
                     </Typography>
 
                     <form className={classes.form} onSubmit={onSubmit}>
-                        { formLabel === 'Sign-up'
+                        { formLabel === 'Sign-up' || formLabel === 'Admin Sign-up'
                             ? renderInputFields(
                                 classes.formControl,
                                 !!errors.username,
@@ -64,7 +64,7 @@ const AuthForm = (props) => {
                             )
                         }
                         {
-                            formLabel === 'Sign-up' &&
+                            (formLabel === 'Sign-up' || formLabel === 'Admin Sign-up') &&
                             renderInputFields(
                                 classes.formControl,
                                 !!errors.email,
@@ -80,7 +80,7 @@ const AuthForm = (props) => {
                             )
                         }
                         {
-                            formLabel === 'Sign-up' &&
+                            (formLabel === 'Sign-up' || formLabel === 'Admin Sign-up') &&
                             renderInputFields(
                                 classes.formControl,
                                 !!errors.contact,
@@ -96,7 +96,7 @@ const AuthForm = (props) => {
                             )
                         }
                         {
-                            formLabel === 'Sign-up'
+                            formLabel === 'Sign-up' || formLabel === 'Admin Sign-up'
                                 ? renderInputFields(
                                 classes.formControl,
                                 !!errors.password,
@@ -125,7 +125,7 @@ const AuthForm = (props) => {
                                 )
                         }
                         {
-                            formLabel === 'Sign-up'
+                            formLabel === 'Sign-up' || formLabel === 'Admin Sign-up'
                                 ? <Button disabled={formHasError()} variant="contained" type="submit" fullWidth color="primary" className={classes.submit}>
                                     {authButton}
                                     <Icon className={classes.rightIcon}>send</Icon>
