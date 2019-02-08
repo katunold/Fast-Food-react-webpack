@@ -19,12 +19,10 @@ export const authAction = (requestData, URL) => (dispatch) => {
     return axios.post(URL, {...signUpData})
         .then(response => response.data)
         .then( response => {
-            console.log(response);
             dispatch(signUpActionCreator(response))
         })
         .catch( error => {
             const { data } = error.response;
-            console.log(data);
             dispatch(signUpActionCreator(data));
         })
 };
