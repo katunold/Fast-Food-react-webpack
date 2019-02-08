@@ -6,7 +6,7 @@ const webpack = require('webpack');
 const config = require('../webpack.config.js');
 
 const compiler = webpack(config);
-const port = process.env.PORT || 3001;
+const port = process.env.PORT || 3000;
 const app = express();
 
 app.use(express.static('src'));

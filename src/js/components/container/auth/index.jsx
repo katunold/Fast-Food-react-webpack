@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, {Component, Fragment} from 'react';
 import { FormControl, FormHelperText, Input, InputLabel } from '@material-ui/core';
 import AuthForm from '../../presentational/auth/index.jsx';
 import {
@@ -8,6 +8,11 @@ import {
     validateUsername
 } from '../../../../utils/validators.js';
 import { capitalizeWord } from '../../../../utils/index.js';
+import {connect} from "react-redux";
+import {authAction} from "../../../redux/actions/auth/index.js";
+import {API} from "../../../constants/index.js";
+import FastFoodSnackBar from "../snackBar/index.jsx";
+import CircularProgressLoader from "../../presentational/progress/index.jsx";
 
 class Authentication extends Component {
 
@@ -37,9 +42,35 @@ class Authentication extends Component {
         }
     };
 
+    snack = {
+        message: '',
+        open: false,
+        variant: 'info'
+    };
+
     constructor(props) {
         super(props);
         this.state = this.initialState;
+    }
+
+    componentWillReceiveProps(nextProps) {
+        const { auth } = nextProps;
+        const {status, message} = auth;
+        if (!!message) {
+            this.snack.message = message;
+            this.snack.open = true;
+            this.snack.variant = status === 'success' ? 'success' : 'error';
+            this.setState({ loader: { loading: false } });
+        }else {
+            this.snack.open = false;
+        }
+
+        if (status==='success') {
+            // const { history } = this.props;
+            this.setState({ ...this.initialState });
+            // history.push('/login');
+            // this.props.history.push('/login');
+        }
     }
 
     renderInputFields = (
@@ -66,6 +97,18 @@ class Authentication extends Component {
 
     handleSignUp = (event) => {
         event.preventDefault();
+        const { dispatch } = this.props;
+        if(!this.formHasError()) {
+            const { username, email, contact, user_type, password } = this.state;
+            const signupdata = { username, email, contact, user_type, password };
+            this.props.match.params.endpoint === 'admin'
+                ? signupdata.user_type = 'admin'
+                : null;
+
+            console.log(signupdata);
+            dispatch(authAction(signupdata, API.SIGN_UP_URL));
+            this.setState({loader: { loading: true}})
+        }
     };
 
     handleLogin = (event) => {
@@ -84,6 +127,11 @@ class Authentication extends Component {
 
     };
 
+    handleSnackClose = (event, reason) => {
+        this.snack.open = false;
+        this.setState({});
+    };
+
     formHasError = () => {
         const {
             username, email, contact, password
@@ -98,7 +146,9 @@ class Authentication extends Component {
 
     render() {
         const { location } = this.props;
-        const formCustom = location.pathname === '/login'
+        const { open, message, variant } = this.snack;
+        const { loader } = this.state;
+        const formCustom = this.props.match.params.endpoint === 'login'
             ? {
                 formLabel: 'Login',
                 authButton: 'Login',
@@ -106,27 +156,50 @@ class Authentication extends Component {
                 linkWord: 'Do not have an account? Sign-up.',
                 onSubmit: this.handleLogin,
             }
-            : {
-                formLabel: 'Sign-up',
+            : this.props.match.params.endpoint === "admin"
+                ? {
+                formLabel: 'Admin Sign-up',
                 authButton: 'Register',
                 switchLink: '/login',
                 linkWord: 'Already have an account? Login.',
                 onSubmit: this.handleSignUp,
-            };
+                }
+                : {
+                    formLabel: 'Sign-up',
+                    authButton: 'Register',
+                    switchLink: '/login',
+                    linkWord: 'Already have an account? Login.',
+                    onSubmit: this.handleSignUp,
+                };
         return (
-            <AuthForm
-                onSubmit={formCustom.onSubmit}
-                renderInputFields={this.renderInputFields}
-                onChange={this.onChange}
-                formLabel={formCustom.formLabel}
-                authButton={formCustom.authButton}
-                switchLink={formCustom.switchLink}
-                linkWord={formCustom.linkWord}
-                formHasError={this.formHasError}
-                {...this.state}
-            />
+            <Fragment>
+                <CircularProgressLoader {...loader} />
+                <FastFoodSnackBar
+                    variant={variant}
+                    open={open}
+                    handleClose={this.handleSnackClose}
+                    message={message}
+                />
+                <AuthForm
+                    onSubmit={formCustom.onSubmit}
+                    renderInputFields={this.renderInputFields}
+                    onChange={this.onChange}
+                    formLabel={formCustom.formLabel}
+                    authButton={formCustom.authButton}
+                    switchLink={formCustom.switchLink}
+                    linkWord={formCustom.linkWord}
+                    formHasError={this.formHasError}
+                    {...this.state}
+                />
+            </Fragment>
         );
     }
 }
 
-export default Authentication;
+const mapStateToProps = state => ({auth: state.authReducer});
+const mapDispatchToProps = dispatch => ({ dispatch });
+
+
+export { Authentication as AuthenticationTest };
+
+export default connect(mapStateToProps, mapDispatchToProps)(Authentication);
