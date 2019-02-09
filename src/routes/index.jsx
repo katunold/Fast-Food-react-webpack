@@ -6,10 +6,8 @@ import Authentication from "../js/components/container/auth/index.jsx";
 const Routes = () => (
     <Router>
         <Switch>
-            <Route component={App} path="/" exact />
+            <Route component={App} path="/home" exact />
             <Route component={Authentication} path="/:endpoint" exact />
-            {/*<Route component={Authentication} path="/:admin" exact />*/}
-            {/*<Route component={Authentication} path="/:login" exact />*/}
         </Switch>
     </Router>
 );

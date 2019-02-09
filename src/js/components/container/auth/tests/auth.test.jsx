@@ -20,6 +20,11 @@ const userData = {
     password: '1qaz2wsx'
 };
 
+const loginData = {
+    username: 'Arnold',
+    password: '1qaz2wsx'
+};
+
 describe('Auth container', () => {
     beforeEach(() => {
         store = mockStore({
@@ -27,21 +32,20 @@ describe('Auth container', () => {
                 data: {}
             }
         });
-        // window.history.pushState({}, 'auth form', '/signup');
         wrapper = shallow(<AuthenticationTest {...props} dispatch={jest.fn} />)
     });
 
     it('renders auth form without crashing', () => {
-        console.log(wrapper.debug);
         expect(wrapper).toHaveLength(1);
         wrapper.setProps({ auth: {
             status: 'success',
                 message: "Successfully registered",
                 data: {
-                contact: "0706180670",
+                    contact: "0706180670",
                     email: "kabo@mail.com",
                     user_name: "Kabody",
-                    user_type: "client"}
+                    user_type: "client"
+                }
         }});
         wrapper.setProps({ auth: {
                 status: 'fail',
@@ -81,13 +85,20 @@ describe('Auth container', () => {
     });
 
     it('should sign-up an admin user', () => {
-        const prop = {
+        const props = {
             match: {params: {endpoint: 'admin'}}
         };
-       const wrap = shallow(<AuthenticationTest {...prop} dispatch={jest.fn} />);
+       const wrap = shallow(<AuthenticationTest {...props} dispatch={jest.fn} />);
         wrap.setState(userData);
         wrap.instance().handleSignUp({ preventDefault: jest.fn });
         wrap.instance().handleSignUp({ preventDefault: jest.fn });
+    });
+
+    it('should login a user', () => {
+        const wrap = shallow(<AuthenticationTest {...props} dispatch={jest.fn} />);
+        wrap.setState(loginData);
+        wrap.instance().handleLogin({ preventDefault: jest.fn });
+        wrap.instance().handleLogin({ preventDefault: jest.fn });
     });
 
     it('mount the component ', () => {

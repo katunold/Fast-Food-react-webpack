@@ -56,6 +56,7 @@ class Authentication extends Component {
     componentWillReceiveProps(nextProps) {
         const { auth } = nextProps;
         const {status, message} = auth;
+        const { endpoint } = this.props.match.params;
         if (!!message) {
             this.snack.message = message;
             this.snack.open = true;
@@ -65,13 +66,17 @@ class Authentication extends Component {
             this.snack.open = false;
         }
 
-        if (status==='success') {
-            // const { history } = this.props;
-            this.setState({ ...this.initialState });
-            // history.push('/login');
-            // this.props.history.push('/login');
+        if ((status==='success')) {
+            endpoint === 'login'
+                ? this.redirect('home')
+                : this.redirect('login');
         }
     }
+
+    redirect = (endpoint) => {
+        this.setState({ ...this.initialState });
+        window.location.assign(endpoint);
+    };
 
     renderInputFields = (
         form,
@@ -97,15 +102,13 @@ class Authentication extends Component {
 
     handleSignUp = (event) => {
         event.preventDefault();
-        const { dispatch } = this.props;
+        const { dispatch, match } = this.props;
         if(!this.formHasError()) {
             const { username, email, contact, user_type, password } = this.state;
             const signupdata = { username, email, contact, user_type, password };
-            this.props.match.params.endpoint === 'admin'
+            match.params.endpoint === 'admin'
                 ? signupdata.user_type = 'admin'
                 : null;
-
-            console.log(signupdata);
             dispatch(authAction(signupdata, API.SIGN_UP_URL));
             this.setState({loader: { loading: true}})
         }
@@ -113,6 +116,11 @@ class Authentication extends Component {
 
     handleLogin = (event) => {
         event.preventDefault();
+        const { dispatch } = this.props;
+        const { username, password } = this.state;
+        const loginData = {username, password};
+        dispatch(authAction(loginData, API.LOGIN_URL));
+        this.setState({loader: { loading: true}})
     };
 
     onChange = name => (event) => {
@@ -145,10 +153,10 @@ class Authentication extends Component {
     };
 
     render() {
-        const { location } = this.props;
+        const { endpoint } = this.props.match.params;
         const { open, message, variant } = this.snack;
         const { loader } = this.state;
-        const formCustom = this.props.match.params.endpoint === 'login'
+        const formCustom = endpoint === 'login'
             ? {
                 formLabel: 'Login',
                 authButton: 'Login',
@@ -156,7 +164,7 @@ class Authentication extends Component {
                 linkWord: 'Do not have an account? Sign-up.',
                 onSubmit: this.handleLogin,
             }
-            : this.props.match.params.endpoint === "admin"
+            : endpoint === "admin"
                 ? {
                 formLabel: 'Admin Sign-up',
                 authButton: 'Register',
