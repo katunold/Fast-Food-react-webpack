@@ -46,21 +46,33 @@ describe('Auth actions', () => {
             }
         });
 
-        const expectedActions = [{ payload: { message: "Successfully registered",status: "success", data: {} }, type: 'SIGN_UP' }];
         store.dispatch(authAction(userData, API.SIGN_UP_URL)).then(() => {
-            expect(store.getActions()).toEqual(expectedActions);
+            expect(store.getActions()).toEqual(
+                [{
+                    payload: { message: "Successfully registered",status: "success", data: {} },
+                    type: 'SIGN_UP'
+                }]
+            );
         });
     });
 
     it('failed sign-up with missing data', () => {
         moxios.stubRequest(API.SIGN_UP_URL, {
-            status: 400
+            status: 400,
+            response: {
+                message: "unsuccessful",
+                status: "fail",
+                data: false
+            }
         });
 
-        const expectedActions = [{ payload: {}, type: 'SIGN_UP' }];
-
         store.dispatch(authAction(userDataIncomplete, API.SIGN_UP_URL)).then(() => {
-            expect(store.getActions()).toEqual(expectedActions);
+            expect(store.getActions()).toEqual(
+                [{
+                    payload: { message: "unsuccessful",status: "fail", data: false },
+                    type: 'SIGN_UP'
+                }]
+            );
         });
     });
 
